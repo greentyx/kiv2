@@ -493,72 +493,6 @@
     margin-top: 10px;
   }
 
-  /* ============ DARK SHOWCASE SECTIONS (hardware & animações) ============ */
-  .dark-section{
-    background: #101114;
-  }
-  .dark-section .section-head h2{ color: #fff; }
-  .dark-section .section-head p{ color: rgba(237,238,241,0.62); }
-  .dark-section .eyebrow{
-    background: rgba(139,127,217,0.16);
-    color: #C9C1F2;
-  }
-
-  .showcase-card{
-    background: #17181C;
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.35);
-    transition: transform 0.22s ease, box-shadow 0.22s ease;
-  }
-  .showcase-card:hover{ transform: translateY(-5px); box-shadow: 0 16px 36px rgba(0,0,0,0.45); }
-
-  .showcase-thumb{
-    aspect-ratio: 16/10;
-    background: linear-gradient(160deg, #202128, #131418);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(237,238,241,0.55);
-    font-family: var(--font-mono);
-    font-size: 13px;
-    text-align: center;
-    padding: 16px;
-  }
-
-  .showcase-body{ padding: 22px 22px 26px; }
-
-  .showcase-tag{
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #A79AE8;
-    margin-bottom: 8px;
-    display: block;
-  }
-
-  .showcase-title{
-    font-family: var(--font-display);
-    font-size: 17px;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 4px;
-  }
-
-  .showcase-sub{
-    display: block;
-    font-size: 12.5px;
-    color: rgba(237,238,241,0.5);
-    margin-bottom: 10px;
-  }
-
-  .showcase-desc{
-    font-size: 14px;
-    color: rgba(237,238,241,0.72);
-  }
-
   /* ============ COMENTÁRIOS ============ */
   .comments-shell{
     background: var(--surface);
@@ -590,7 +524,7 @@
   .auth-btn img{ width: 18px; height: 18px; }
   .auth-btn:hover{ border-color: var(--ink-faint); background: #fff; }
 
-  .comment-list{ display: flex; flex-direction: column; gap: 18px; }
+  .comment-list{ display: flex; flex-direction: column; gap: 18px; opacity: 0.5; pointer-events: none; }
 
   .comment-item{
     display: flex; gap: 14px;
@@ -598,8 +532,6 @@
     border-bottom: 1px solid var(--line);
   }
   .comment-item:last-child{ border-bottom: none; padding-bottom: 0; }
-
-  .comment-body{ flex: 1; min-width: 0; }
 
   .avatar{
     width: 38px; height: 38px;
@@ -609,56 +541,7 @@
   }
 
   .comment-item .name{ font-weight: 600; font-size: 14.5px; }
-  .comment-item .text{ color: var(--ink-soft); font-size: 14.5px; margin-top: 4px; white-space: pre-wrap; word-break: break-word; }
-
-  .comment-edited{
-    font-weight: 400;
-    font-size: 11.5px;
-    color: var(--ink-faint);
-    margin-left: 6px;
-  }
-
-  .comment-actions{ display: flex; gap: 14px; margin-top: 8px; }
-  .comment-actions button{
-    background: none; border: none; padding: 0; cursor: pointer;
-    font-family: var(--font-body); font-size: 12.5px; font-weight: 600;
-    color: var(--ink-faint);
-  }
-  .comment-actions button:hover{ color: var(--ink); }
-  .comment-actions button.danger:hover{ color: #C1443A; }
-
-  .comment-edit-form{ display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-  .comment-edit-form textarea{
-    width: 100%; min-height: 60px; resize: vertical;
-    padding: 10px 12px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    font-family: var(--font-body);
-    font-size: 14px;
-    background: var(--bg);
-  }
-  .comment-edit-form textarea:focus{ outline: none; border-color: var(--accent); background: #fff; }
-
-  .comment-edit-actions{ display: flex; gap: 10px; }
-  .comment-edit-actions button{
-    font-family: var(--font-body);
-    font-size: 12.5px; font-weight: 600;
-    padding: 7px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: var(--bg);
-    cursor: pointer;
-  }
-  .comment-edit-actions button.save{ background: var(--ink); color: #fff; border-color: var(--ink); }
-  .comment-edit-actions button.save:hover{ opacity: 0.9; }
-  .comment-edit-actions button.cancel:hover{ border-color: var(--ink-faint); }
-
-  .comment-empty, .comment-loading{
-    text-align: center;
-    color: var(--ink-faint);
-    font-size: 14px;
-    padding: 24px 0;
-  }
+  .comment-item .text{ color: var(--ink-soft); font-size: 14.5px; margin-top: 4px; }
 
   .signed-in-bar{
     display: none;
@@ -891,48 +774,44 @@
 </section>
 
 <!-- ============ ANIMAÇÕES (substitui a galeria de fotos por enquanto) ============ -->
-<section id="animacoes" class="dark-section">
+<section id="animacoes">
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">animações</span>
-      <h2>Animações Expressivas</h2>
-      <p>A personalidade do Kivi é construída por camadas de animações dinâmicas, além do modo jogo escondido no toque. Fotos e GIFs reais entram aqui assim que a montagem estiver pronta.</p>
+      <h2>As expressões do Kivi</h2>
+      <p>O Kivi ainda não tem uma carcaça final, então por enquanto esta seção mostra as animações do display. Fotos do robô entram aqui assim que a montagem estiver pronta.</p>
     </div>
     <div class="card-grid">
-      <div class="showcase-card reveal">
-        <div class="showcase-thumb">GIF &ndash; Piscadas</div>
-        <div class="showcase-body">
-          <span class="showcase-tag">Animação contínua</span>
-          <h4 class="showcase-title">Piscadas Expressivas</h4>
-          <span class="showcase-sub">Estado: Ativo / Presença</span>
-          <p class="showcase-desc">Animação suave e constante de piscadas que mantém o Kivi "vivo" e atento ao seu lado na mesa.</p>
+      <div class="media-card reveal">
+        <div class="thumb"><div class="mini-eye"></div><div class="mini-eye"></div></div>
+        <div class="body">
+          <h4>Piscada comum</h4>
+          <p>A animação padrão de descanso, em loop na maior parte do tempo.</p>
+          <span class="state-tag">frequente</span>
         </div>
       </div>
-      <div class="showcase-card reveal">
-        <div class="showcase-thumb">GIF &ndash; Lámen</div>
-        <div class="showcase-body">
-          <span class="showcase-tag">Animação ocasional</span>
-          <h4 class="showcase-title">Apreciando Lámen</h4>
-          <span class="showcase-sub">Estado: Alimentando-se</span>
-          <p class="showcase-desc">De tempos em tempos, o Kivi aprecia uma tigela de lámen quentinha para trazer leveza ao ambiente.</p>
+      <div class="media-card reveal">
+        <div class="thumb"><div class="mini-eye"></div><div class="mini-eye"></div></div>
+        <div class="body">
+          <h4>Hora do lámen</h4>
+          <p>Uma animação de comer lámen, exibida vez ou outra para variar o humor.</p>
+          <span class="state-tag">ocasional</span>
         </div>
       </div>
-      <div class="showcase-card reveal">
-        <div class="showcase-thumb">GIF &ndash; Meme</div>
-        <div class="showcase-body">
-          <span class="showcase-tag">Animação rara</span>
-          <h4 class="showcase-title">Momento Meme</h4>
-          <span class="showcase-sub">Estado: Divertido</span>
-          <p class="showcase-desc">Uma animação rara e surpresa inspirada em memes para arrancar um sorriso no meio da sua rotina.</p>
+      <div class="media-card reveal">
+        <div class="thumb"><div class="mini-eye"></div><div class="mini-eye"></div></div>
+        <div class="body">
+          <h4>Easter egg</h4>
+          <p>Uma animação rara, estilo meme, que aparece raramente para quem estiver prestando atenção.</p>
+          <span class="state-tag">raro</span>
         </div>
       </div>
-      <div class="showcase-card reveal">
-        <div class="showcase-thumb">Prévia &ndash; Modo Jogo</div>
-        <div class="showcase-body">
-          <span class="showcase-tag">Interativo</span>
-          <h4 class="showcase-title">Modo Jogo</h4>
-          <span class="showcase-sub">Estado: Toque longo (3s)</span>
-          <p class="showcase-desc">Um toque contínuo de cerca de três segundos troca as animações por um minijogo estilo runner.</p>
+      <div class="media-card reveal">
+        <div class="thumb"><div class="mini-eye"></div><div class="mini-eye"></div></div>
+        <div class="body">
+          <h4>Modo jogo</h4>
+          <p>Toque longo de três segundos troca as animações por um minijogo estilo runner.</p>
+          <span class="state-tag">interativo</span>
         </div>
       </div>
     </div>
@@ -940,36 +819,42 @@
 </section>
 
 <!-- ============ COMPONENTES ============ -->
-<section id="componentes" class="dark-section">
+<section id="componentes">
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">por dentro</span>
-      <h2>Hardware do Projeto</h2>
-      <p>Engenharia enxuta e eficiente rodando em componentes acessíveis e de baixo custo.</p>
+      <h2>Componentes</h2>
+      <p>O hardware que faz o Kivi funcionar.</p>
     </div>
     <div class="card-grid">
-      <div class="showcase-card reveal">
-        <div class="showcase-thumb">ESP32-C3 SuperMini</div>
-        <div class="showcase-body">
-          <h4 class="showcase-title">ESP32-C3 SuperMini</h4>
-          <span class="showcase-sub">Microcontrolador</span>
-          <p class="showcase-desc">O cérebro do Kivi. Processador ultra compacto responsável por gerenciar a lógica das animações e do jogo.</p>
+      <div class="media-card component-card reveal">
+        <div class="icon-row">
+          <img src="assets/ESP32.webp" alt="Placa ESP32-C3 SuperMini">
+          <h4>ESP32-C3 SuperMini</h4>
+        </div>
+        <div class="body">
+          <p>Microcontrolador principal, responsável por processar o toque e controlar o display.</p>
+          <span class="func">função: núcleo de processamento</span>
         </div>
       </div>
-      <div class="showcase-card reveal">
-        <div class="showcase-thumb">Display OLED 0.96&quot; I2C</div>
-        <div class="showcase-body">
-          <h4 class="showcase-title">Display OLED 0.96" I2C</h4>
-          <span class="showcase-sub">Interface Visual</span>
-          <p class="showcase-desc">Tela de alto contraste onde as expressões faciais e o minijogo ganham vida de forma nítida.</p>
+      <div class="media-card component-card reveal">
+        <div class="icon-row">
+          <img src="assets/display.webp" alt="">
+          <h4>Display OLED 0.96" I2C</h4>
+        </div>
+        <div class="body">
+          <p>Tela onde vivem os olhos e as animações do Kivi.</p>
+          <span class="func">função: expressão visual</span>
         </div>
       </div>
-      <div class="showcase-card reveal">
-        <div class="showcase-thumb">Sensor Touch Capacitivo</div>
-        <div class="showcase-body">
-          <h4 class="showcase-title">Sensor Touch Capacitivo</h4>
-          <span class="showcase-sub">Interatividade</span>
-          <p class="showcase-desc">Permite a interação direta por toque e é utilizado para realizar a troca de modos do robô.</p>
+      <div class="media-card component-card reveal">
+        <div class="icon-row">
+          <img src="assets/sensor.webp" alt="">
+          <h4>Sensor touch capacitivo</h4>
+        </div>
+        <div class="body">
+          <p>Detecta toques curtos e longos para alternar entre modos.</p>
+          <span class="func">função: entrada de interação</span>
         </div>
       </div>
     </div>
@@ -1011,7 +896,20 @@
       </form>
 
       <div class="comment-list" id="commentList">
-        <div class="comment-loading">Carregando comentários...</div>
+        <div class="comment-item">
+          <div class="avatar"></div>
+          <div>
+            <div class="name">Comentário de exemplo</div>
+            <div class="text">Os comentários reais aparecem aqui depois que a autenticação estiver ativa.</div>
+          </div>
+        </div>
+        <div class="comment-item">
+          <div class="avatar"></div>
+          <div>
+            <div class="name">Outro comentário de exemplo</div>
+            <div class="text">Cada usuário poderá editar ou excluir os próprios comentários.</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1077,7 +975,6 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
   // ---- Firebase (projeto sejakivi) ----
   const firebaseConfig = {
@@ -1092,8 +989,6 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const googleProvider = new firebase.auth.GoogleAuthProvider();
-  const db = firebase.firestore();
-  const commentsRef = db.collection('comments');
 
   function signInWithGoogle(){
     auth.signInWithPopup(googleProvider).catch(err => {
@@ -1119,137 +1014,30 @@
       bar.style.display = 'none';
       form.style.display = 'none';
     }
-    // re-renderiza para mostrar/ocultar os botões de editar/apagar do usuário certo
-    if (lastCommentsSnapshot) renderComments(lastCommentsSnapshot);
   });
 
-  // ---- comentários (Firestore, permanentes) ----
-  const commentList = document.getElementById('commentList');
-  let lastCommentsSnapshot = null;
-
-  function escapeHtml(str){
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
-  function renderComments(snapshot){
-    lastCommentsSnapshot = snapshot;
-    if (snapshot.empty){
-      commentList.innerHTML = '<div class="comment-empty">Seja o primeiro a comentar.</div>';
-      return;
-    }
-    const currentUid = auth.currentUser ? auth.currentUser.uid : null;
-    commentList.innerHTML = '';
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const id = doc.id;
-      const isOwner = currentUid && data.uid === currentUid;
-      const avatarStyle = data.photoURL ? `style="background-image:url('${data.photoURL}'); background-size:cover; background-position:center;"` : '';
-      const item = document.createElement('div');
-      item.className = 'comment-item';
-      item.dataset.id = id;
-      item.innerHTML = `
-        <div class="avatar" ${avatarStyle}></div>
-        <div class="comment-body">
-          <div class="name">${escapeHtml(data.name || 'Usuário')}${data.edited ? '<span class="comment-edited">(editado)</span>' : ''}</div>
-          <div class="text">${escapeHtml(data.text || '')}</div>
-          ${isOwner ? `
-            <div class="comment-actions">
-              <button type="button" onclick="startEditComment('${id}')">editar</button>
-              <button type="button" class="danger" onclick="deleteCommentKivi('${id}')">apagar</button>
-            </div>
-          ` : ''}
-        </div>
-      `;
-      commentList.appendChild(item);
-    });
-  }
-
-  commentsRef.orderBy('createdAt', 'desc').onSnapshot(renderComments, err => {
-    console.error('Erro ao carregar comentários:', err);
-    commentList.innerHTML = '<div class="comment-empty">Não foi possível carregar os comentários agora.</div>';
-  });
-
+  // TODO: persistir comentários no Firestore (coleção "comments"); por ora ficam só na sessão
   function handleCommentSubmit(e){
     e.preventDefault();
     const input = document.getElementById('commentInput');
     const text = input.value.trim();
     if (!text) return false;
     const user = auth.currentUser;
-    if (!user) return false;
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    if (submitBtn) submitBtn.disabled = true;
-    commentsRef.add({
-      uid: user.uid,
-      name: user.displayName || 'Você',
-      photoURL: user.photoURL || null,
-      text: text,
-      edited: false,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).catch(err => {
-      console.error(err);
-      alert('Não foi possível publicar o comentário: ' + err.message);
-    }).finally(() => {
-      if (submitBtn) submitBtn.disabled = false;
-    });
-    input.value = '';
-    return false;
-  }
-
-  function deleteCommentKivi(id){
-    if (!confirm('Apagar este comentário? Essa ação não pode ser desfeita.')) return;
-    commentsRef.doc(id).delete().catch(err => {
-      console.error(err);
-      alert('Não foi possível apagar o comentário: ' + err.message);
-    });
-  }
-
-  function startEditComment(id){
-    const item = commentList.querySelector(`.comment-item[data-id="${id}"]`);
-    if (!item) return;
-    const body = item.querySelector('.comment-body');
-    const textEl = item.querySelector('.text');
-    const actions = item.querySelector('.comment-actions');
-    const currentText = textEl.textContent;
-
-    const editForm = document.createElement('div');
-    editForm.className = 'comment-edit-form';
-    editForm.innerHTML = `
-      <textarea>${escapeHtml(currentText)}</textarea>
-      <div class="comment-edit-actions">
-        <button type="button" class="save">Salvar</button>
-        <button type="button" class="cancel">Cancelar</button>
+    const list = document.getElementById('commentList');
+    const item = document.createElement('div');
+    item.className = 'comment-item';
+    const avatarStyle = user && user.photoURL ? `style="background-image:url('${user.photoURL}'); background-size:cover; background-position:center;"` : '';
+    item.innerHTML = `
+      <div class="avatar" ${avatarStyle}></div>
+      <div>
+        <div class="name">${user ? (user.displayName || 'Você') : 'Você'}</div>
+        <div class="text"></div>
       </div>
     `;
-
-    textEl.style.display = 'none';
-    if (actions) actions.style.display = 'none';
-    body.appendChild(editForm);
-    editForm.querySelector('textarea').focus();
-
-    editForm.querySelector('.cancel').onclick = () => {
-      editForm.remove();
-      textEl.style.display = '';
-      if (actions) actions.style.display = '';
-    };
-
-    editForm.querySelector('.save').onclick = () => {
-      const newText = editForm.querySelector('textarea').value.trim();
-      if (!newText) return;
-      commentsRef.doc(id).update({
-        text: newText,
-        edited: true,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(err => {
-        console.error(err);
-        alert('Não foi possível salvar a edição: ' + err.message);
-      });
-      editForm.remove();
-      textEl.style.display = '';
-      if (actions) actions.style.display = '';
-    };
+    item.querySelector('.text').textContent = text;
+    list.prepend(item);
+    input.value = '';
+    return false;
   }
 
   // ---- reveal on scroll ----
