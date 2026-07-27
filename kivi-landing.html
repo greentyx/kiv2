@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kivi, companheiro de mesa</title>
+<meta name="description" content="Kivi é um pequeno robô companheiro de mesa: presença, expressões e um joguinho escondido no toque.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --bg: #F6F7FA;
+    --surface: #FFFFFF;
+    --ink: #16181C;
+    --ink-soft: #5B5F68;
+    --ink-faint: #90949C;
+    --accent: #8B7FD9;
+    --accent-dim: #EFEBFC;
+    --accent-ink: #4A3F94;
+    --line: #E3E5EA;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 10px;
+    --shadow-sm: 0 1px 2px rgba(20,20,30,0.04), 0 1px 1px rgba(20,20,30,0.03);
+    --shadow-md: 0 8px 24px rgba(20,20,30,0.06), 0 2px 6px rgba(20,20,30,0.04);
+    --shadow-lg: 0 20px 48px rgba(20,20,30,0.10), 0 4px 12px rgba(20,20,30,0.05);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; margin: 0; padding: 0; }
+
+  html{ scroll-behavior: smooth; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img{ max-width: 100%; display: block; }
+
+  a{ color: inherit; }
+
+  .container{
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    background: var(--accent-dim);
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+
+  h1, h2, h3{
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  section{ padding: 96px 0; }
+
+  @media (max-width: 640px){
+    section{ padding: 64px 0; }
+  }
+
+  .section-head{
+    max-width: 620px;
+    margin-bottom: 56px;
+  }
+
+  .section-head h2{
+    font-size: clamp(28px, 4vw, 38px);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .section-head p{
+    color: var(--ink-soft);
+    font-size: 17px;
+  }
+
+  button, .btn{
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 14px 26px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    text-decoration: none;
+  }
+
+  .btn-primary{
+    background: var(--ink);
+    color: #fff;
+  }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+  .btn-accent{
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-accent:hover{ transform: translateY(-2px); box-shadow: 0 12px 28px rgba(139,127,217,0.35); }
+
+  .btn-ghost{
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .btn-ghost:hover{ background: var(--surface); border-color: var(--ink-faint); }
+
+  /* ============ REVEAL ON SCROLL ============ */
+  .reveal{
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.is-visible{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ NAV ============ */
+  header.site-nav{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(246,247,250,0.82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-inner{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+
+  .logo{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-dot{
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse-dot 2.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot{
+    0%, 100%{ opacity: 1; transform: scale(1); }
+    50%{ opacity: 0.55; transform: scale(0.8); }
+  }
+
+  .nav-links{
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    font-size: 14.5px;
+    font-weight: 500;
+  }
+
+  .nav-links a{
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .nav-links a:hover{ color: var(--ink); }
+
+  .nav-cta{ display: flex; gap: 12px; align-items: center; }
+
+  .nav-toggle{
+    display: none;
+    background: none; border: none; cursor: pointer;
+    flex-direction: column; gap: 4px; padding: 8px;
+  }
+  .nav-toggle span{ width: 20px; height: 2px; background: var(--ink); border-radius: 2px; }
+
+  @media (max-width: 860px){
+    .nav-links{ display: none; }
+    .nav-toggle{ display: flex; }
+  }
+
+  /* ============ HERO ============ */
+  .hero{
+    padding: 88px 0 64px;
+    overflow: hidden;
+  }
+
+  .hero-grid{
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  @media (max-width: 900px){
+    .hero-grid{ grid-template-columns: 1fr; gap: 48px; }
+  }
+
+  .hero h1{
+    font-size: clamp(40px, 6vw, 64px);
+    font-weight: 700;
+    line-height: 1.04;
+    margin-bottom: 20px;
+  }
+
+  .hero .lede{
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 460px;
+    margin-bottom: 32px;
+  }
+
+  .hero-actions{ display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
+
+  .hero-meta{
+    display: flex;
+    gap: 28px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-faint);
+  }
+
+  .hero-meta span{ color: var(--ink); font-weight: 500; }
+
+  /* ---- device mockup (signature element) ---- */
+  .device-stage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .device{
+    width: min(340px, 82vw);
+    aspect-ratio: 3/3.6;
+    background: linear-gradient(160deg, #23252B, #101114);
+    border-radius: 42px;
+    padding: 28px;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+  }
+
+  .device::before{
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border-radius: 34px;
+    border: 1px solid rgba(255,255,255,0.05);
+    pointer-events: none;
+  }
+
+  .device-screen{
+    width: 100%; height: 100%;
+    background: #0A0B0D;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .device-screen::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
+    pointer-events: none;
+  }
+
+  .face{ display: flex; gap: 34px; }
+
+  .eye{
+    width: 34px; height: 34px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 18px rgba(139,127,217,0.65);
+    animation: blink 4.2s ease-in-out infinite;
+  }
+  .eye.right{ animation-delay: 0.05s; }
+
+  @keyframes blink{
+    0%, 88%, 100%{ transform: scaleY(1); }
+    92%{ transform: scaleY(0.08); }
+    96%{ transform: scaleY(1); }
+  }
+
+  .face.rare .eye{
+    border-radius: 6px;
+    animation: none;
+    transform: scaleY(1);
+  }
+
+  .device-label{
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .touch-ring{
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 46px; height: 46px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+  }
+
+  /* ============ VIDEO ============ */
+  .video-frame{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-frame .play{
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.18s ease;
+  }
+  .video-frame .play:hover{ transform: scale(1.08); }
+
+  .video-frame .placeholder-note{
+    position: absolute;
+    bottom: 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  /* ============ SOBRE ============ */
+  .about-grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 760px){ .about-grid{ grid-template-columns: 1fr; } }
+
+  .about-card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 28px;
+  }
+
+  .about-card h3{
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .about-card p{
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+
+  .about-card .tag{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent-ink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* ============ CARD GRID (animações / componentes) ============ */
+  .card-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 22px;
+  }
+
+  .media-card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+  }
+  .media-card:hover{ transform: translateY(-5px); box-shadow: var(--shadow-md); }
+
+  .media-card .thumb{
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #1B1C20, #101114);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .media-card .thumb .mini-eye{
+    width: 16px; height: 16px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin: 0 8px;
+    animation: blink 3.6s ease-in-out infinite;
+  }
+
+  .media-card .body{ padding: 18px 20px 22px; }
+
+  .media-card h4{
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .media-card p{ color: var(--ink-soft); font-size: 14px; }
+
+  .media-card .state-tag{
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-ink);
+    background: var(--accent-dim);
+    padding: 3px 9px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-top: 10px;
+  }
+
+  /* componentes card icon row */
+  .component-card .icon-row{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 22px 20px 0;
+  }
+  .component-card .icon-row img{
+    width: 26px; height: 26px;
+    opacity: 0.75;
+  }
+  .component-card .body{ padding: 14px 20px 22px; }
+  .component-card .func{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 10px;
+  }
+
+  /* ============ COMENTÁRIOS ============ */
+  .comments-shell{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+  }
+
+  @media (max-width: 640px){ .comments-shell{ padding: 26px; } }
+
+  .auth-gate{
+    text-align: center;
+    padding: 32px 16px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-md);
+    margin-bottom: 32px;
+  }
+
+  .auth-gate p{ color: var(--ink-soft); margin-bottom: 20px; font-size: 15px; }
+
+  .auth-buttons{ display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  .auth-btn{
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 11px 20px;
+  }
+  .auth-btn img{ width: 18px; height: 18px; }
+  .auth-btn:hover{ border-color: var(--ink-faint); background: #fff; }
+
+  .comment-list{ display: flex; flex-direction: column; gap: 18px; opacity: 0.5; pointer-events: none; }
+
+  .comment-item{
+    display: flex; gap: 14px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .comment-item:last-child{ border-bottom: none; padding-bottom: 0; }
+
+  .avatar{
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    flex-shrink: 0;
+  }
+
+  .comment-item .name{ font-weight: 600; font-size: 14.5px; }
+  .comment-item .text{ color: var(--ink-soft); font-size: 14.5px; margin-top: 4px; }
+
+  .signed-in-bar{
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    margin-bottom: 24px;
+  }
+  .signed-in-bar .avatar{ background-size: cover; background-position: center; }
+  .signed-in-bar .who{ flex: 1; font-size: 14px; }
+  .signed-in-bar .who strong{ display: block; font-size: 14.5px; }
+  .signed-in-bar .who span{ color: var(--ink-faint); font-size: 12.5px; }
+
+  .comment-form{ display: none; gap: 10px; margin-bottom: 28px; }
+  .comment-form textarea{
+    flex: 1;
+    resize: vertical;
+    min-height: 44px;
+    padding: 11px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    background: var(--bg);
+  }
+  .comment-form textarea:focus{ outline: none; border-color: var(--accent); background: #fff; }
+
+  /* ============ APOIE ============ */
+  .support{
+    background: linear-gradient(135deg, var(--ink), #232530);
+    border-radius: var(--radius-lg);
+    padding: 56px;
+    color: #fff;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  @media (max-width: 760px){
+    .support{ grid-template-columns: 1fr; padding: 36px 28px; }
+  }
+
+  .support h2{ color: #fff; font-size: clamp(26px, 3.6vw, 34px); margin-bottom: 14px; }
+  .support p{ color: rgba(255,255,255,0.72); font-size: 15.5px; }
+
+  .support-action{ display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+
+  @media (max-width: 760px){ .support-action{ align-items: stretch; } }
+
+  .support-note{ font-family: var(--font-mono); font-size: 12px; color: rgba(255,255,255,0.5); }
+
+  /* ============ COMPRAR ============ */
+  .preorder-shell{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+
+  @media (max-width: 800px){
+    .preorder-shell{ grid-template-columns: 1fr; padding: 30px; }
+  }
+
+  .field{ margin-bottom: 18px; }
+  .field label{
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+  }
+  .field input, .field select{
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    background: var(--bg);
+    transition: border-color 0.15s ease;
+  }
+  .field input:focus, .field select:focus{
+    outline: none;
+    border-color: var(--accent);
+    background: #fff;
+  }
+
+  .preorder-success{
+    display: none;
+    background: var(--accent-dim);
+    color: var(--accent-ink);
+    padding: 16px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    margin-top: 14px;
+  }
+  .preorder-success.show{ display: block; }
+
+  /* ============ FOOTER ============ */
+  footer{
+    border-top: 1px solid var(--line);
+    padding: 48px 0;
+  }
+
+  .footer-inner{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-social{ display: flex; gap: 14px; }
+  .footer-social a{
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .footer-social img{ width: 16px; height: 16px; opacity: 0.6; }
+
+  .footer-copy{ font-size: 13px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="site-nav">
+  <div class="container nav-inner">
+    <div class="logo"><span class="logo-dot"></span>kivi</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#sobre">sobre</a></li>
+        <li><a href="#animacoes">animações</a></li>
+        <li><a href="#componentes">componentes</a></li>
+        <li><a href="#comentarios">comunidade</a></li>
+        <li><a href="#apoie">apoie</a></li>
+      </ul>
+    </nav>
+    <div class="nav-cta">
+      <a href="#comprar" class="btn btn-accent">quero ser avisado</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="inicio">
+  <div class="container hero-grid">
+    <div class="reveal">
+      <span class="eyebrow">em desenvolvimento</span>
+      <h1>Um companheiro pequeno para a sua mesa.</h1>
+      <p class="lede">Kivi fica ao seu lado, reage ao toque e muda de expressão conforme o momento do dia. Nada de tela grande, nada de notificação: só presença.</p>
+      <div class="hero-actions">
+        <a href="#sobre" class="btn btn-primary">conhecer o projeto</a>
+        <a href="#video" class="btn btn-ghost">ver em ação</a>
+      </div>
+      <div class="hero-meta">
+        <div>display <span>OLED 0.96"</span></div>
+        <div>núcleo <span>ESP32-C3</span></div>
+        <div>interação <span>toque capacitivo</span></div>
+      </div>
+    </div>
+    <div class="device-stage reveal">
+      <div class="device">
+        <div class="device-screen">
+          <div class="face" id="kiviFace">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+          </div>
+        </div>
+        <div class="touch-ring"></div>
+      </div>
+      <span class="device-label">protótipo, render de referência</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIDEO ============ -->
+<section id="video">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">demonstração</span>
+      <h2>Kivi em funcionamento</h2>
+      <p>Um vídeo curto mostrando as animações, o toque longo e o modo jogo escondido.</p>
+    </div>
+    <div class="video-frame reveal">
+      <div class="play">▶</div>
+      <span class="placeholder-note">vídeo de demonstração, a ser adicionado</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOBRE ============ -->
+<section id="sobre">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">sobre o kivi</span>
+      <h2>O que é e por que existe</h2>
+      <p>Kivi é um companheiro de mesa interativo criado para oferecer companhia, conforto e pequenos momentos de diversão. Construído com um ESP32-C3 SuperMini, display OLED 0.96 I2C e sensor touch capacitivo, ele ganha vida por meio de animações expressivas e um pequeno jogo integrado, tudo rodando em hardware simples e de baixo custo.</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-card reveal">
+        <span class="tag">propósito</span>
+        <h3>Presença, não substituição</h3>
+        <p>Kivi é um pequeno companheiro robótico desenvolvido para transmitir a sensação de que sempre existe alguém por perto. Seu objetivo não é substituir pessoas nem agir como um assistente complexo, mas oferecer uma presença silenciosa e acolhedora durante o trabalho, os estudos ou os momentos de descanso.</p>
+      </div>
+      <div class="about-card reveal">
+        <span class="tag">hardware</span>
+        <h3>ESP32-C3, OLED e touch</h3>
+        <p>O projeto utiliza um ESP32-C3 SuperMini, um display OLED 0.96 I2C e um sensor touch capacitivo para criar uma experiência simples e acessível. Sua personalidade é construída por meio de três camadas de animações: uma animação contínua de piscadas, uma animação ocasional em que Kivi aprecia um prato de lámen e uma animação rara inspirada em um meme, trazendo pequenos momentos de surpresa e humor.</p>
+      </div>
+      <div class="about-card reveal">
+        <span class="tag">como funciona</span>
+        <h3>Animações e jogo</h3>
+        <p>Além das animações, Kivi possui um jogo integrado inspirado em Geometry Dash. Um toque contínuo de aproximadamente três segundos no sensor touch alterna entre o modo de animações e o modo de jogo, permitindo que o usuário escolha entre observar seu companheiro ou passar alguns minutos se divertindo.</p>
+      </div>
+      <div class="about-card reveal">
+        <span class="tag">evolução</span>
+        <h3>Um MVP em constante crescimento</h3>
+        <p>Kivi nasceu como um MVP e foi pensado para evoluir continuamente. A cada nova versão, ele poderá receber novas expressões, animações, modos de funcionamento, minijogos e outras funções que ampliem sua personalidade sem perder sua proposta original: ser um pequeno companheiro robótico acessível, divertido e sempre presente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANIMAÇÕES (substitui a galeria de fotos por enquanto) ============ -->
+<section id="animacoes">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">animações</span>
+      <h2>As expressões do Kivi</h2>
+      <p>O Kivi ainda não tem uma carcaça final, então por enquanto esta seção mostra as animações do display. Fotos do robô entram aqui assim que a montagem estiver pronta.</p>
+    </div>
+    <div class="card-grid">
+      <div class="media-card reveal">
+        <div class="thumb"><div class="mini-eye"></div><div class="mini-eye"></div></div>
+        <div class="body">
+          <h4>Piscada comum</h4>
+          <p>A animação padrão de descanso, em loop na maior parte do tempo.</p>
+          <span class="state-tag">frequente</span>
+        </div>
+      </div>
+      <div class="media-card reveal">
+        <div class="thumb"><div class="mini-eye"></div><div class="mini-eye"></div></div>
+        <div class="body">
+          <h4>Hora do lámen</h4>
+          <p>Uma animação de comer lámen, exibida vez ou outra para variar o humor.</p>
+          <span class="state-tag">ocasional</span>
+        </div>
+      </div>
+      <div class="media-card reveal">
+        <div class="thumb"><div class="mini-eye"></div><div class="mini-eye"></div></div>
+        <div class="body">
+          <h4>Easter egg</h4>
+          <p>Uma animação rara, estilo meme, que aparece raramente para quem estiver prestando atenção.</p>
+          <span class="state-tag">raro</span>
+        </div>
+      </div>
+      <div class="media-card reveal">
+        <div class="thumb"><div class="mini-eye"></div><div class="mini-eye"></div></div>
+        <div class="body">
+          <h4>Modo jogo</h4>
+          <p>Toque longo de três segundos troca as animações por um minijogo estilo runner.</p>
+          <span class="state-tag">interativo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPONENTES ============ -->
+<section id="componentes">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">por dentro</span>
+      <h2>Componentes</h2>
+      <p>O hardware que faz o Kivi funcionar.</p>
+    </div>
+    <div class="card-grid">
+      <div class="media-card component-card reveal">
+        <div class="icon-row">
+          <img src="https://img.icons8.com/ios/50/000000/microchip.png" alt="">
+          <h4>ESP32-C3 SuperMini</h4>
+        </div>
+        <div class="body">
+          <p>Microcontrolador principal, responsável por processar o toque e controlar o display.</p>
+          <span class="func">função: núcleo de processamento</span>
+        </div>
+      </div>
+      <div class="media-card component-card reveal">
+        <div class="icon-row">
+          <img src="https://img.icons8.com/ios/50/000000/screen.png" alt="">
+          <h4>Display OLED 0.96" I2C</h4>
+        </div>
+        <div class="body">
+          <p>Tela onde vivem os olhos e as animações do Kivi.</p>
+          <span class="func">função: expressão visual</span>
+        </div>
+      </div>
+      <div class="media-card component-card reveal">
+        <div class="icon-row">
+          <img src="https://img.icons8.com/ios/50/000000/touch-sensor.png" alt="">
+          <h4>Sensor touch capacitivo</h4>
+        </div>
+        <div class="body">
+          <p>Detecta toques curtos e longos para alternar entre modos.</p>
+          <span class="func">função: entrada de interação</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMENTÁRIOS ============ -->
+<section id="comentarios">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">comunidade</span>
+      <h2>Comentários e feedback</h2>
+      <p>Conte o que achou do Kivi ou sugira algo para o projeto.</p>
+    </div>
+    <div class="comments-shell reveal">
+      <div class="auth-gate" id="authGate">
+        <p>Faça login com sua conta Google ou Apple para participar da comunidade e deixar seu comentário.</p>
+        <div class="auth-buttons">
+          <button class="btn auth-btn" onclick="signInWithGoogle()">
+            <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="">
+            Continuar com Google
+          </button>
+          <button class="btn auth-btn" onclick="alert('Login com Apple: integração pendente.')">
+            <img src="https://img.icons8.com/ios-filled/50/000000/mac-os.png" alt="">
+            Continuar com Apple
+          </button>
+        </div>
+      </div>
+
+      <div class="signed-in-bar" id="signedInBar">
+        <div class="avatar" id="userAvatar"></div>
+        <div class="who"><strong id="userName"></strong><span>logado</span></div>
+        <button class="btn btn-ghost" onclick="signOutKivi()">Sair</button>
+      </div>
+
+      <form class="comment-form" id="commentForm" onsubmit="return handleCommentSubmit(event)">
+        <textarea id="commentInput" placeholder="Escreva um comentário..." required></textarea>
+        <button type="submit" class="btn btn-primary">Publicar</button>
+      </form>
+
+      <div class="comment-list" id="commentList">
+        <div class="comment-item">
+          <div class="avatar"></div>
+          <div>
+            <div class="name">Comentário de exemplo</div>
+            <div class="text">Os comentários reais aparecem aqui depois que a autenticação estiver ativa.</div>
+          </div>
+        </div>
+        <div class="comment-item">
+          <div class="avatar"></div>
+          <div>
+            <div class="name">Outro comentário de exemplo</div>
+            <div class="text">Cada usuário poderá editar ou excluir os próprios comentários.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APOIE ============ -->
+<section id="apoie">
+  <div class="container">
+    <div class="support reveal">
+      <div>
+        <h2>Apoie o projeto</h2>
+        <p>Qualquer valor a partir de R$ 1,00 ajuda a manter o desenvolvimento do Kivi: placas, sensores e tempo de trabalho.</p>
+      </div>
+      <div class="support-action">
+        <button class="btn btn-accent" onclick="alert('Integração com pagamento em breve.')">Fazer uma doação</button>
+        <span class="support-note">método de pagamento em integração</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUERO COMPRAR ============ -->
+<section id="comprar">
+  <div class="container">
+    <div class="preorder-shell reveal">
+      <div>
+        <span class="eyebrow">pré-venda</span>
+        <h2>Quero ser avisado</h2>
+        <p style="color:var(--ink-soft); margin-top:14px; font-size:15px;">Deixe seu contato e avisamos assim que o primeiro lote do Kivi estiver disponível.</p>
+      </div>
+      <form id="preorderForm" onsubmit="return handlePreorder(event)">
+        <div class="field">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" required placeholder="Seu nome">
+        </div>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" required placeholder="seu@email.com">
+        </div>
+        <div class="field">
+          <label for="pais">País (opcional)</label>
+          <input type="text" id="pais" placeholder="Brasil">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Quero ser avisado</button>
+        <div class="preorder-success" id="preorderSuccess">Pronto. Você será avisado assim que o Kivi estiver disponível.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container footer-inner">
+    <div class="logo"><span class="logo-dot"></span>kivi</div>
+    <div class="footer-social">
+      <a href="#" aria-label="Instagram"><img src="https://img.icons8.com/ios/50/000000/instagram-new.png" alt=""></a>
+      <a href="#" aria-label="YouTube"><img src="https://img.icons8.com/ios/50/000000/youtube-play.png" alt=""></a>
+      <a href="#" aria-label="GitHub"><img src="https://img.icons8.com/ios/50/000000/github.png" alt=""></a>
+    </div>
+    <div class="footer-copy">© 2026 Kivi. Todos os direitos reservados.</div>
+  </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+  // ---- Firebase (projeto sejakivi) ----
+  const firebaseConfig = {
+    apiKey: "AIzaSyCBBeFrZxclaF03We5suSZB0zZxz06Hcio",
+    authDomain: "sejakivi.firebaseapp.com",
+    projectId: "sejakivi",
+    storageBucket: "sejakivi.firebasestorage.app",
+    messagingSenderId: "1024485301046",
+    appId: "1:1024485301046:web:87989d445fbd2fce057197",
+    measurementId: "G-NHNM0HJ0RQ"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+  function signInWithGoogle(){
+    auth.signInWithPopup(googleProvider).catch(err => {
+      console.error(err);
+      alert('Não foi possível entrar com o Google: ' + err.message);
+    });
+  }
+
+  function signOutKivi(){ auth.signOut(); }
+
+  auth.onAuthStateChanged(user => {
+    const gate = document.getElementById('authGate');
+    const bar = document.getElementById('signedInBar');
+    const form = document.getElementById('commentForm');
+    if (user){
+      gate.style.display = 'none';
+      bar.style.display = 'flex';
+      form.style.display = 'flex';
+      document.getElementById('userName').textContent = user.displayName || 'Você';
+      document.getElementById('userAvatar').style.backgroundImage = user.photoURL ? `url('${user.photoURL}')` : 'none';
+    } else {
+      gate.style.display = 'block';
+      bar.style.display = 'none';
+      form.style.display = 'none';
+    }
+  });
+
+  // TODO: persistir comentários no Firestore (coleção "comments"); por ora ficam só na sessão
+  function handleCommentSubmit(e){
+    e.preventDefault();
+    const input = document.getElementById('commentInput');
+    const text = input.value.trim();
+    if (!text) return false;
+    const user = auth.currentUser;
+    const list = document.getElementById('commentList');
+    const item = document.createElement('div');
+    item.className = 'comment-item';
+    const avatarStyle = user && user.photoURL ? `style="background-image:url('${user.photoURL}'); background-size:cover; background-position:center;"` : '';
+    item.innerHTML = `
+      <div class="avatar" ${avatarStyle}></div>
+      <div>
+        <div class="name">${user ? (user.displayName || 'Você') : 'Você'}</div>
+        <div class="text"></div>
+      </div>
+    `;
+    item.querySelector('.text').textContent = text;
+    list.prepend(item);
+    input.value = '';
+    return false;
+  }
+
+  // ---- reveal on scroll ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---- occasional "rare" face state on the hero device, echoing Kivi's real animation layers ----
+  const face = document.getElementById('kiviFace');
+  setInterval(() => {
+    if (Math.random() < 0.12){
+      face.classList.add('rare');
+      setTimeout(() => face.classList.remove('rare'), 1400);
+    }
+  }, 5000);
+
+  // ---- mobile nav toggle placeholder ----
+  // (links already anchor-scroll; add a drawer here if the header grows more items)
+
+  // ---- pré-venda form ----
+  // TODO: substituir por gravação real no Firestore (coleção "preorders")
+  function handlePreorder(e){
+    e.preventDefault();
+    document.getElementById('preorderSuccess').classList.add('show');
+    document.getElementById('preorderForm').reset();
+    return false;
+  }
+</script>
+
+</body>
+</html>
